@@ -3,21 +3,24 @@ import model.PlanEntrenamiento;
 import model.Inscripcion;
 import model.Entrenador;
 import model.SesionEntrenamiento;
+import model.PagoMembresia;
 import repository.UsuarioRepository;
 import repository.PlanRepository;
 import repository.InscripcionRepository;
 import repository.EntrenadorRepository;
 import repository.SesionRepository;
+import repository.PagoMembresiaRepository;
 import service.UsuarioService;
 import service.PlanService;
 import service.InscripcionService;
 import service.EntrenadorService;
 import service.SesionService;
+import service.PagoMembresiaService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-// demo de todo hasta HU-05
+// demo de todo hasta HU-06
 public class Main {
     public static void main(String[] args) {
         // --- HU-01: usuarios ---
@@ -170,5 +173,42 @@ public class Main {
         }
 
         System.out.println("\nSesiones de Carlos (11223344): " + sesionService.listarPorEntrenador("11223344").size());
+
+        // --- HU-06: pagos de membresias ---
+        PagoMembresiaRepository pagoRepo = new PagoMembresiaRepository();
+        PagoMembresiaService pagoService = new PagoMembresiaService(pagoRepo);
+
+        System.out.println("\n--- HU-06: Registrar pagos de membresias ---");
+
+        // pago 1 de Mateo
+        PagoMembresia p1 = new PagoMembresia(
+                "P001",
+                "12345678", // Mateo
+                150000.0,
+                LocalDate.now(),
+                "Efectivo",
+                "2026-09"
+        );
+        pagoService.registrarPago(p1);
+        System.out.println("Pago registrado: " + p1);
+
+        // pago 2 de Ana
+        PagoMembresia p2 = new PagoMembresia(
+                "P002",
+                "87654321", // Ana
+                80000.0,
+                LocalDate.now(),
+                "Transferencia",
+                "2026-09"
+        );
+        pagoService.registrarPago(p2);
+        System.out.println("Pago registrado: " + p2);
+
+        System.out.println("Pagos guardados: " + pagoRepo.obtenerTodos().size());
+        for (PagoMembresia p : pagoService.listarPagos()) {
+            System.out.println(" - " + p);
+        }
+
+        System.out.println("\nPagos de Mateo (12345678): " + pagoService.listarPorUsuario("12345678").size());
     }
 }
