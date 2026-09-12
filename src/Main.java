@@ -1,16 +1,19 @@
 import model.Usuario;
 import model.PlanEntrenamiento;
 import model.Inscripcion;
+import model.Entrenador;
 import repository.UsuarioRepository;
 import repository.PlanRepository;
 import repository.InscripcionRepository;
+import repository.EntrenadorRepository;
 import service.UsuarioService;
 import service.PlanService;
 import service.InscripcionService;
+import service.EntrenadorService;
 
 import java.time.LocalDate;
 
-// demo de todo hasta HU-03
+// demo de todo hasta HU-04
 public class Main {
     public static void main(String[] args) {
         // --- HU-01: usuarios ---
@@ -75,31 +78,56 @@ public class Main {
 
         System.out.println("Planes guardados: " + planRepo.obtenerTodos().size());
 
-        // --- HU-03: inscribir usuarios en planes ---
+        // --- HU-03: inscribir ---
         InscripcionRepository inscripcionRepo = new InscripcionRepository();
         InscripcionService inscripcionService = new InscripcionService(inscripcionRepo);
 
         System.out.println("\n--- HU-03: Inscribir usuarios en planes ---");
 
-        // mateo se inscribe en dos planes (uno y varios)
         inscripcionService.inscribirUsuarioEnPlan("12345678", "101");
         System.out.println("Inscrito 12345678 en 101");
 
         inscripcionService.inscribirUsuarioEnPlan("12345678", "102");
         System.out.println("Inscrito 12345678 en 102");
 
-        // ana se inscribe en uno
         inscripcionService.inscribirUsuarioEnPlan("87654321", "101");
         System.out.println("Inscrito 87654321 en 101");
 
-        System.out.println("\nTodas las inscripciones: " + inscripcionRepo.obtenerTodas().size());
-        for (Inscripcion i : inscripcionService.listarInscripciones()) {
-            System.out.println(" - " + i);
-        }
+        System.out.println("Inscripciones: " + inscripcionRepo.obtenerTodas().size());
 
-        System.out.println("\nInscripciones de Mateo (12345678):");
-        for (Inscripcion i : inscripcionService.listarPorUsuario("12345678")) {
-            System.out.println(" - " + i);
+        // --- HU-04: entrenadores ---
+        EntrenadorRepository entrenadorRepo = new EntrenadorRepository();
+        EntrenadorService entrenadorService = new EntrenadorService(entrenadorRepo);
+
+        System.out.println("\n--- HU-04: Registrar entrenadores ---");
+
+        // entrenador 1
+        Entrenador e1 = new Entrenador(
+                "Carlos",
+                "Ramirez",
+                "11223344",
+                "Pesas", // especialidad
+                "+573002223344",
+                "carlos@gimnasio.com"
+        );
+        entrenadorService.registrarEntrenador(e1);
+        System.out.println("Entrenador registrado: " + e1);
+
+        // entrenador 2
+        Entrenador e2 = new Entrenador(
+                "Luisa",
+                "Martinez",
+                "55667788",
+                "Yoga",
+                "+573003334455",
+                "luisa@gimnasio.com"
+        );
+        entrenadorService.registrarEntrenador(e2);
+        System.out.println("Entrenador registrado: " + e2);
+
+        System.out.println("Entrenadores guardados: " + entrenadorRepo.obtenerTodos().size());
+        for (Entrenador e : entrenadorService.listarEntrenadores()) {
+            System.out.println(" - " + e);
         }
     }
 }
