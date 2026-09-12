@@ -1,20 +1,23 @@
 import model.Usuario;
 import model.PlanEntrenamiento;
+import model.Inscripcion;
 import repository.UsuarioRepository;
 import repository.PlanRepository;
+import repository.InscripcionRepository;
 import service.UsuarioService;
 import service.PlanService;
+import service.InscripcionService;
 
 import java.time.LocalDate;
 
-// Demo HU-01 + HU-02
+// demo de todo hasta HU-03
 public class Main {
     public static void main(String[] args) {
-        // --- HU-01: Registrar usuarios ---
+        // --- HU-01: usuarios ---
         UsuarioRepository usuarioRepo = new UsuarioRepository();
         UsuarioService usuarioService = new UsuarioService(usuarioRepo);
 
-        System.out.println("--- HU-01: Registrar usuarios del gimnasio ---");
+        System.out.println("--- HU-01: Registrar usuarios ---");
 
         Usuario u1 = new Usuario(
                 "Mateo",
@@ -41,15 +44,12 @@ public class Main {
         System.out.println("Usuario registrado: " + u2);
 
         System.out.println("Usuarios guardados: " + usuarioRepo.obtenerTodos().size());
-        for (Usuario u : usuarioService.listarUsuarios()) {
-            System.out.println(" - " + u);
-        }
 
-        // --- HU-02: Registrar planes ---
+        // --- HU-02: planes ---
         PlanRepository planRepo = new PlanRepository();
         PlanService planService = new PlanService(planRepo);
 
-        System.out.println("\n--- HU-02: Registrar planes de entrenamiento ---");
+        System.out.println("\n--- HU-02: Registrar planes ---");
 
         PlanEntrenamiento plan1 = new PlanEntrenamiento(
                 "101",
@@ -74,8 +74,32 @@ public class Main {
         System.out.println("Plan registrado: " + plan2);
 
         System.out.println("Planes guardados: " + planRepo.obtenerTodos().size());
-        for (PlanEntrenamiento p : planService.listarPlanes()) {
-            System.out.println(" - " + p);
+
+        // --- HU-03: inscribir usuarios en planes ---
+        InscripcionRepository inscripcionRepo = new InscripcionRepository();
+        InscripcionService inscripcionService = new InscripcionService(inscripcionRepo);
+
+        System.out.println("\n--- HU-03: Inscribir usuarios en planes ---");
+
+        // mateo se inscribe en dos planes (uno y varios)
+        inscripcionService.inscribirUsuarioEnPlan("12345678", "101");
+        System.out.println("Inscrito 12345678 en 101");
+
+        inscripcionService.inscribirUsuarioEnPlan("12345678", "102");
+        System.out.println("Inscrito 12345678 en 102");
+
+        // ana se inscribe en uno
+        inscripcionService.inscribirUsuarioEnPlan("87654321", "101");
+        System.out.println("Inscrito 87654321 en 101");
+
+        System.out.println("\nTodas las inscripciones: " + inscripcionRepo.obtenerTodas().size());
+        for (Inscripcion i : inscripcionService.listarInscripciones()) {
+            System.out.println(" - " + i);
+        }
+
+        System.out.println("\nInscripciones de Mateo (12345678):");
+        for (Inscripcion i : inscripcionService.listarPorUsuario("12345678")) {
+            System.out.println(" - " + i);
         }
     }
 }
