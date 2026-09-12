@@ -4,23 +4,26 @@ import model.Inscripcion;
 import model.Entrenador;
 import model.SesionEntrenamiento;
 import model.PagoMembresia;
+import model.Sala;
 import repository.UsuarioRepository;
 import repository.PlanRepository;
 import repository.InscripcionRepository;
 import repository.EntrenadorRepository;
 import repository.SesionRepository;
 import repository.PagoMembresiaRepository;
+import repository.SalaRepository;
 import service.UsuarioService;
 import service.PlanService;
 import service.InscripcionService;
 import service.EntrenadorService;
 import service.SesionService;
 import service.PagoMembresiaService;
+import service.SalaService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-// demo de todo hasta HU-06
+// demo de todo hasta HU-07
 public class Main {
     public static void main(String[] args) {
         // --- HU-01: usuarios ---
@@ -210,5 +213,40 @@ public class Main {
         }
 
         System.out.println("\nPagos de Mateo (12345678): " + pagoService.listarPorUsuario("12345678").size());
+
+        // --- HU-07: salas o areas disponibles ---
+        SalaRepository salaRepo = new SalaRepository();
+        SalaService salaService = new SalaService(salaRepo);
+
+        System.out.println("\n--- HU-07: Registrar salas o areas disponibles ---");
+
+        // sala 1
+        Sala sala1 = new Sala(
+                "SA01",
+                "Sala Pesas",
+                30,
+                "Musculacion",
+                "Piso 1"
+        );
+        salaService.registrarSala(sala1);
+        System.out.println("Sala registrada: " + sala1);
+
+        // sala 2
+        Sala sala2 = new Sala(
+                "SA02",
+                "Zona Cardio",
+                20,
+                "Cardio",
+                "Piso 2"
+        );
+        salaService.registrarSala(sala2);
+        System.out.println("Sala registrada: " + sala2);
+
+        System.out.println("Salas guardadas: " + salaRepo.obtenerTodas().size());
+        for (Sala s : salaService.listarSalas()) {
+            System.out.println(" - " + s);
+        }
+
+        System.out.println("\nSalas tipo Cardio: " + salaService.listarPorTipo("Cardio").size());
     }
 }
