@@ -2,18 +2,22 @@ import model.Usuario;
 import model.PlanEntrenamiento;
 import model.Inscripcion;
 import model.Entrenador;
+import model.SesionEntrenamiento;
 import repository.UsuarioRepository;
 import repository.PlanRepository;
 import repository.InscripcionRepository;
 import repository.EntrenadorRepository;
+import repository.SesionRepository;
 import service.UsuarioService;
 import service.PlanService;
 import service.InscripcionService;
 import service.EntrenadorService;
+import service.SesionService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
-// demo de todo hasta HU-04
+// demo de todo hasta HU-05
 public class Main {
     public static void main(String[] args) {
         // --- HU-01: usuarios ---
@@ -129,5 +133,42 @@ public class Main {
         for (Entrenador e : entrenadorService.listarEntrenadores()) {
             System.out.println(" - " + e);
         }
+
+        // --- HU-05: sesiones de entrenamiento dirigidas por entrenadores ---
+        SesionRepository sesionRepo = new SesionRepository();
+        SesionService sesionService = new SesionService(sesionRepo);
+
+        System.out.println("\n--- HU-05: Registrar sesiones de entrenamiento ---");
+
+        // sesion 1 dirigida por Carlos
+        SesionEntrenamiento s1 = new SesionEntrenamiento(
+                "S001",
+                "11223344", // documento de Carlos
+                LocalDate.now(),
+                LocalTime.of(8, 0),
+                60,
+                "Pesas"
+        );
+        sesionService.registrarSesion(s1);
+        System.out.println("Sesion registrada: " + s1);
+
+        // sesion 2 dirigida por Luisa
+        SesionEntrenamiento s2 = new SesionEntrenamiento(
+                "S002",
+                "55667788", // documento de Luisa
+                LocalDate.now().plusDays(1),
+                LocalTime.of(18, 0),
+                90,
+                "Yoga"
+        );
+        sesionService.registrarSesion(s2);
+        System.out.println("Sesion registrada: " + s2);
+
+        System.out.println("Sesiones guardadas: " + sesionRepo.obtenerTodas().size());
+        for (SesionEntrenamiento s : sesionService.listarSesiones()) {
+            System.out.println(" - " + s);
+        }
+
+        System.out.println("\nSesiones de Carlos (11223344): " + sesionService.listarPorEntrenador("11223344").size());
     }
 }
