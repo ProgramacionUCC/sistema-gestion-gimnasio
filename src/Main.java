@@ -1,19 +1,21 @@
 import model.Usuario;
+import model.PlanEntrenamiento;
 import repository.UsuarioRepository;
+import repository.PlanRepository;
 import service.UsuarioService;
+import service.PlanService;
 
 import java.time.LocalDate;
 
-// Demo HU-01: literal lo pedido - solo registrar y mostrar
+// Demo HU-01 + HU-02
 public class Main {
     public static void main(String[] args) {
-        // Se crean los cajones y el servicio (repository + service)
+        // --- HU-01: Registrar usuarios ---
         UsuarioRepository usuarioRepo = new UsuarioRepository();
         UsuarioService usuarioService = new UsuarioService(usuarioRepo);
 
         System.out.println("--- HU-01: Registrar usuarios del gimnasio ---");
 
-        // Usuario 1
         Usuario u1 = new Usuario(
                 "Mateo",
                 "Bustamante",
@@ -26,7 +28,6 @@ public class Main {
         usuarioService.registrarUsuario(u1);
         System.out.println("Usuario registrado: " + u1);
 
-        // Usuario 2
         Usuario u2 = new Usuario(
                 "Ana",
                 "Lopez",
@@ -42,6 +43,39 @@ public class Main {
         System.out.println("Usuarios guardados: " + usuarioRepo.obtenerTodos().size());
         for (Usuario u : usuarioService.listarUsuarios()) {
             System.out.println(" - " + u);
+        }
+
+        // --- HU-02: Registrar planes ---
+        PlanRepository planRepo = new PlanRepository();
+        PlanService planService = new PlanService(planRepo);
+
+        System.out.println("\n--- HU-02: Registrar planes de entrenamiento ---");
+
+        PlanEntrenamiento plan1 = new PlanEntrenamiento(
+                "101",
+                "Plan Musculacion",
+                "Rutina de fuerza 5 dias por semana",
+                8,
+                150000,
+                "INTERMEDIO"
+        );
+        planService.registrarPlan(plan1);
+        System.out.println("Plan registrado: " + plan1);
+
+        PlanEntrenamiento plan2 = new PlanEntrenamiento(
+                "102",
+                "Plan Cardio",
+                "Rutina de cardio y resistencia",
+                4,
+                80000,
+                "BASICO"
+        );
+        planService.registrarPlan(plan2);
+        System.out.println("Plan registrado: " + plan2);
+
+        System.out.println("Planes guardados: " + planRepo.obtenerTodos().size());
+        for (PlanEntrenamiento p : planService.listarPlanes()) {
+            System.out.println(" - " + p);
         }
     }
 }
